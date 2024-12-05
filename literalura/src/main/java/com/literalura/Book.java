@@ -3,8 +3,6 @@ package com.literalura;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import java.util.List;
-
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Book {
 
@@ -15,7 +13,13 @@ public class Book {
     private String title;
 
     @JsonProperty("authors")
-    private List<Author> authors;
+    private Author[] authors;
+
+    @JsonProperty("languages")
+    private String[] languages;
+
+    @JsonProperty("download_count")
+    private int downloadCount;
 
     public int getId() {
         return id;
@@ -33,11 +37,27 @@ public class Book {
         this.title = title;
     }
 
-    public List<Author> getAuthors() {
+    public Author[] getAuthors() {
         return authors;
     }
 
-    public void setAuthors(List<Author> authors) {
+    public void setAuthors(Author[] authors) {
         this.authors = authors;
+    }
+
+    public String[] getLanguages() {
+        return languages;
+    }
+
+    public void setLanguages(String[] languages) {
+        this.languages = languages;
+    }
+
+    public int getDownloadCount() {
+        return downloadCount;
+    }
+
+    public void setDownloadCount(int downloadCount) {
+        this.downloadCount = downloadCount;
     }
 }
