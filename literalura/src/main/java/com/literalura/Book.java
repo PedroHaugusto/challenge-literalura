@@ -1,20 +1,24 @@
 package com.literalura;
 
+import com.fasterxml.jackson.annotation.JsonAlias;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.List;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Book {
     private int id;
-    private String title;
+
+    @JsonAlias({"title"})
+    private String bookTitle;
+
     private List<Author> authors;
-    private List<String> subjects;
-    private List<String> bookshelves;
-    private List<String> languages;
 
     @JsonProperty("download_count")
     private int downloadCount;
 
-    // Getters e Setters
+    // Getters, Setters e toString
     public int getId() {
         return id;
     }
@@ -23,12 +27,12 @@ public class Book {
         this.id = id;
     }
 
-    public String getTitle() {
-        return title;
+    public String getBookTitle() {
+        return bookTitle;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    public void setBookTitle(String bookTitle) {
+        this.bookTitle = bookTitle;
     }
 
     public List<Author> getAuthors() {
@@ -39,35 +43,25 @@ public class Book {
         this.authors = authors;
     }
 
-    public List<String> getSubjects() {
-        return subjects;
-    }
-
-    public void setSubjects(List<String> subjects) {
-        this.subjects = subjects;
-    }
-
-    public List<String> getBookshelves() {
-        return bookshelves;
-    }
-
-    public void setBookshelves(List<String> bookshelves) {
-        this.bookshelves = bookshelves;
-    }
-
-    public List<String> getLanguages() {
-        return languages;
-    }
-
-    public void setLanguages(List<String> languages) {
-        this.languages = languages;
-    }
-
     public int getDownloadCount() {
         return downloadCount;
     }
 
     public void setDownloadCount(int downloadCount) {
         this.downloadCount = downloadCount;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder authorNames = new StringBuilder();
+        if (authors != null) {
+            authors.forEach(author -> authorNames.append(author.getName()).append(", "));
+        }
+        return "Book{" +
+                "id=" + id +
+                ", title='" + bookTitle + '\'' +
+                ", authors=" + (!authorNames.isEmpty() ? authorNames.substring(0, authorNames.length() - 2) : "N/A") +
+                ", downloads=" + downloadCount +
+                '}';
     }
 }

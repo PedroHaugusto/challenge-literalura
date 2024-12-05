@@ -1,10 +1,10 @@
 package com.literalura;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-
-import java.awt.print.Book;
 import java.util.List;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class BookApiResponse {
     private int count;
     private String next;
@@ -13,7 +13,7 @@ public class BookApiResponse {
     @JsonProperty("results")
     private List<Book> books;
 
-    // Getters e Setters
+    // Getters, Setters e toString
     public int getCount() {
         return count;
     }
@@ -44,5 +44,15 @@ public class BookApiResponse {
 
     public void setBooks(List<Book> books) {
         this.books = books;
+    }
+
+    @Override
+    public String toString() {
+        return "BookApiResponse{" +
+                "count=" + count +
+                ", next='" + next + '\'' +
+                ", previous='" + previous + '\'' +
+                ", books=" + books +
+                '}';
     }
 }

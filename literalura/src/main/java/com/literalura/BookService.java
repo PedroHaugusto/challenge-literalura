@@ -15,7 +15,7 @@ public class BookService {
         this.client = HttpClient.newHttpClient();
     }
 
-    public BookApiResponse buscarLivros() {
+    public BookApiResponse fetchBooks() {
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create("https://gutendex.com/books/"))
                 .GET()
@@ -34,5 +34,13 @@ public class BookService {
         } catch (IOException | InterruptedException e) {
             throw new RuntimeException("Erro na requisição HTTP", e);
         }
+    }
+
+    public void displayBooks(BookApiResponse apiResponse) {
+        System.out.println("Total de livros disponíveis: " + apiResponse.getCount());
+        System.out.println("Próxima página: " + apiResponse.getNext());
+        System.out.println("Livros retornados:");
+
+        apiResponse.getBooks().forEach(System.out::println);
     }
 }
