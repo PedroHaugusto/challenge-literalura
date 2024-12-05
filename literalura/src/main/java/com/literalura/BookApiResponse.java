@@ -2,18 +2,24 @@ package com.literalura;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.List;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class BookApiResponse {
+
+    @JsonProperty("count")
     private int count;
+
+    @JsonProperty("next")
     private String next;
+
+    @JsonProperty("previous")
     private String previous;
 
     @JsonProperty("results")
-    private List<Book> books;
+    private List<Book> results;
 
-    // Getters, Setters e toString
     public int getCount() {
         return count;
     }
@@ -38,21 +44,11 @@ public class BookApiResponse {
         this.previous = previous;
     }
 
-    public List<Book> getBooks() {
-        return books;
+    public List<Book> getResults() {
+        return results;
     }
 
-    public void setBooks(List<Book> books) {
-        this.books = books;
-    }
-
-    @Override
-    public String toString() {
-        return "BookApiResponse{" +
-                "count=" + count +
-                ", next='" + next + '\'' +
-                ", previous='" + previous + '\'' +
-                ", books=" + books +
-                '}';
+    public void setResults(List<Book> results) {
+        this.results = results;
     }
 }

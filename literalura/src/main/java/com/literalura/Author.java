@@ -1,19 +1,20 @@
 package com.literalura;
 
-import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Author {
+
+    @JsonProperty("name")
     private String name;
 
-    @JsonAlias({"birth_year"})
-    private int birthYear;
+    @JsonProperty("birth_year")
+    private Integer birthYear;
 
-    @JsonAlias({"death_year"})
-    private int deathYear;
+    @JsonProperty("death_year")
+    private Integer deathYear;
 
-    // Getters, Setters e toString
     public String getName() {
         return name;
     }
@@ -22,28 +23,19 @@ public class Author {
         this.name = name;
     }
 
-    public int getBirthYear() {
+    public Integer getBirthYear() {
         return birthYear;
     }
 
-    public void setBirthYear(int birthYear) {
+    public void setBirthYear(Integer birthYear) {
         this.birthYear = birthYear;
     }
 
-    public int getDeathYear() {
+    public Integer getDeathYear() {
         return deathYear;
     }
 
-    public void setDeathYear(int deathYear) {
+    public void setDeathYear(Integer deathYear) {
         this.deathYear = deathYear;
-    }
-
-    @Override
-    public String toString() {
-        return "Author{" +
-                "name='" + name + '\'' +
-                ", birthYear=" + birthYear +
-                ", deathYear=" + deathYear +
-                '}';
     }
 }
