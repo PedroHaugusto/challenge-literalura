@@ -40,6 +40,9 @@ public class BookCatalogApp implements CommandLineRunner {
                 case 4:
                     listAuthorsAliveInYear(scanner);
                     break;
+                case 5:
+                    displayBooksByLanguageStatistics(scanner);
+                    break;
                 case 0:
                     System.out.println("Saindo...");
                     break;
@@ -55,6 +58,7 @@ public class BookCatalogApp implements CommandLineRunner {
         System.out.println("2. Listar todos os livros");
         System.out.println("3. Listar todos os autores");
         System.out.println("4. Listar autores vivos em determinado ano");
+        System.out.println("5. Exibir quantidade de livros por idioma");
         System.out.println("0. Sair");
     }
 
@@ -65,6 +69,7 @@ public class BookCatalogApp implements CommandLineRunner {
         author.setName("Autor Exemplo");
         author.setBirthYear(1900);
         author.setDeathYear(1980);
+
         Book book = new Book();
         book.setTitle(title);
         book.setLanguage("EN");
@@ -95,5 +100,14 @@ public class BookCatalogApp implements CommandLineRunner {
                         author.getBirthYear() <= year &&
                         (author.getDeathYear() == null || author.getDeathYear() > year))
                 .forEach(System.out::println);
+    }
+
+    private void displayBooksByLanguageStatistics(Scanner scanner) {
+        System.out.println("Digite o idioma (ex: EN, FR, PT): ");
+        String language = scanner.next().toUpperCase();
+
+        long count = bookService.countBooksByLanguage(language);
+
+        System.out.println("Quantidade de livros no idioma '" + language + "': " + count);
     }
 }

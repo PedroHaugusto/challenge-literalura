@@ -33,4 +33,8 @@ public class BookService {
     public List<Author> getAllAuthors() {
         return authorRepository.findAll();
     }
+
+    public long countBooksByLanguage(String language) {
+        return bookRepository.countByLanguage(language);
+    }
 }
