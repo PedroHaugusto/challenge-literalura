@@ -3,85 +3,98 @@ package com.literalura;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
 @Component
 public class BookCatalogApp implements CommandLineRunner {
 
-    private final CatalogService catalogService;
+    private final BookService bookService;
+    private final List<Book> bookCatalog;
 
-    public BookCatalogApp(CatalogService catalogService) {
-        this.catalogService = catalogService;
+    public BookCatalogApp(BookService bookService) {
+        this.bookService = bookService;
+        this.bookCatalog = new ArrayList<>();
     }
 
     @Override
     public void run(String... args) {
         Scanner scanner = new Scanner(System.in);
+        int option;
 
-        while (true) {
-            System.out.println("\n=== Catálogo de Livros ===");
-            System.out.println("1. Buscar livro por título");
-            System.out.println("2. Listar todos os livros");
-            System.out.println("3. Listar livros por idioma");
-            System.out.println("4. Sair");
-            System.out.print("Escolha uma opção: ");
-            int choice = scanner.nextInt();
-            scanner.nextLine(); // Consumir o newline
+        do {
+            displayMenu();
+            option = scanner.nextInt();
 
-            switch (choice) {
-                case 1 -> {
-                    System.out.print("Digite o título do livro: ");
-                    String title = scanner.nextLine();
-                    Book book = catalogService.fetchBookByTitle(title);
-
-                    if (book != null) {
-                        System.out.println("\nLivro encontrado:");
-                        System.out.println("Título: " + book.getTitle());
-                        System.out.println("Autor: " + (book.getAuthors().length > 0 ? book.getAuthors()[0].getName() : "N/A"));
-                        System.out.println("Idioma: " + (book.getLanguages().length > 0 ? book.getLanguages()[0] : "N/A"));
-                        System.out.println("Downloads: " + book.getDownloadCount());
-                    } else {
-                        System.out.println("Nenhum livro encontrado com esse título.");
-                    }
-                }
-                case 2 -> {
-                    List<Book> books = catalogService.listAllBooks();
-                    if (books.isEmpty()) {
-                        System.out.println("Nenhum livro no catálogo.");
-                    } else {
-                        System.out.println("\nLivros no catálogo:");
-                        books.forEach(book -> {
-                            System.out.println("Título: " + book.getTitle());
-                            System.out.println("Idioma: " + (book.getLanguages().length > 0 ? book.getLanguages()[0] : "N/A"));
-                            System.out.println("Downloads: " + book.getDownloadCount());
-                            System.out.println("-----");
-                        });
-                    }
-                }
-                case 3 -> {
-                    System.out.print("Digite o idioma (ex: en): ");
-                    String language = scanner.nextLine();
-                    List<Book> booksByLanguage = catalogService.listBooksByLanguage(language);
-
-                    if (booksByLanguage.isEmpty()) {
-                        System.out.println("Nenhum livro encontrado para o idioma informado.");
-                    } else {
-                        System.out.println("\nLivros no idioma '" + language + "':");
-                        booksByLanguage.forEach(book -> {
-                            System.out.println("Título: " + book.getTitle());
-                            System.out.println("Downloads: " + book.getDownloadCount());
-                            System.out.println("-----");
-                        });
-                    }
-                }
-                case 4 -> {
+            switch (option) {
+                case 1:
+                    searchBookByTitle(scanner);
+                    break;
+                case 2:
+                    listAllBooks();
+                    break;
+                case 3:
+                    listAllAuthors();
+                    break;
+                case 4:
+                    listAuthorsAliveInYear(scanner);
+                    break;
+                case 0:
                     System.out.println("Saindo...");
-                    scanner.close();
-                    return;
-                }
-                default -> System.out.println("Opção inválida. Tente novamente.");
+                    break;
+                default:
+                    System.out.println("Opção inválida. Tente novamente.");
             }
-        }
+        } while (option != 0);
+    }
+
+    private void displayMenu() {
+        System.out.println("Selecione uma opção:");
+        System.out.println("1. Buscar livro por título");
+        System.out.println("2. Listar todos os livros");
+        System.out.println("3. Listar todos os autores");
+        System.out.println("4. Listar autores vivos em determinado ano");
+        System.out.println("0. Sair");
+    }
+
+    private void searchBookByTitle(Scanner scanner) {
+        System.out.print("Digite o título do livro: ");
+        String title = scanner.next();
+        BookApiResponse apiResponse = bookService.fetchBooks(); // Implementar busca por título na API
+        // Filtrar pelo título correto e adicionar ao catálogo
+        apiResponse.getResults().stream()
+                .filter(book -> book.getTitle().equalsIgnoreCase(title))
+                .findFirst()
+                .ifPresent(bookCatalog::add);
+        System.out.println("Livro adicionado ao catálogo.");
+    }
+
+    private void listAllBooks() {
+        System.out.println("Catálogo de livros:");
+        bookCatalog.forEach(System.out::println);
+    }
+
+    private void listAllAuthors() {
+        System.out.println("Autores disponíveis:");
+        bookCatalog.forEach(book -> {
+            Author author = book.getAuthor();
+            if (author != null) {
+                System.out.println("- " + author.getName());
+            }
+        });
+    }
+
+    private void listAuthorsAliveInYear(Scanner scanner) {
+        System.out.print("Digite o ano para verificar autores vivos: ");
+        int year = scanner.nextInt();
+        System.out.println("Autores vivos no ano " + year + ":");
+        bookCatalog.stream()
+                .map(Book::getAuthor)
+                .filter(author -> author != null &&
+                        author.getBirthYear() != null &&
+                        author.getBirthYear() <= year &&
+                        (author.getDeathYear() == null || author.getDeathYear() > year))
+                .forEach(author -> System.out.println("- " + author.getName()));
     }
 }

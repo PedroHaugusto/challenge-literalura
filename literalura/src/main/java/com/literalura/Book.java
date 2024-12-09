@@ -1,33 +1,12 @@
 package com.literalura;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
-
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class Book {
-
-    @JsonProperty("id")
-    private int id;
-
-    @JsonProperty("title")
     private String title;
-
-    @JsonProperty("authors")
-    private Author[] authors;
-
-    @JsonProperty("languages")
-    private String[] languages;
-
-    @JsonProperty("download_count")
+    private Author author;
+    private String language;
     private int downloadCount;
 
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
+    // Getters, Setters e toString
 
     public String getTitle() {
         return title;
@@ -37,20 +16,20 @@ public class Book {
         this.title = title;
     }
 
-    public Author[] getAuthors() {
-        return authors;
+    public Author getAuthor() {
+        return author;
     }
 
-    public void setAuthors(Author[] authors) {
-        this.authors = authors;
+    public void setAuthor(Author author) {
+        this.author = author;
     }
 
-    public String[] getLanguages() {
-        return languages;
+    public String getLanguage() {
+        return language;
     }
 
-    public void setLanguages(String[] languages) {
-        this.languages = languages;
+    public void setLanguage(String language) {
+        this.language = language;
     }
 
     public int getDownloadCount() {
@@ -59,5 +38,15 @@ public class Book {
 
     public void setDownloadCount(int downloadCount) {
         this.downloadCount = downloadCount;
+    }
+
+    @Override
+    public String toString() {
+        return "Book{" +
+                "title='" + title + '\'' +
+                ", author=" + author +
+                ", language='" + language + '\'' +
+                ", downloadCount=" + downloadCount +
+                '}';
     }
 }

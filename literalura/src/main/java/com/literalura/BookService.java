@@ -61,22 +61,4 @@ public class BookService {
             throw new RuntimeException("Erro na requisição HTTP", e);
         }
     }
-
-    public void displayBooks(BookApiResponse apiResponse) {
-        if (apiResponse != null && apiResponse.getResults() != null) {
-            apiResponse.getResults().forEach(book -> {
-                System.out.println("ID: " + book.getId());
-                System.out.println("Título: " + book.getTitle());
-                System.out.println("Autores:");
-                book.getAuthors().forEach(author -> {
-                    System.out.println("  Nome: " + author.getName());
-                    System.out.println("  Ano de nascimento: " + author.getBirthYear());
-                    System.out.println("  Ano de falecimento: " + author.getDeathYear());
-                });
-                System.out.println("-----");
-            });
-        } else {
-            System.out.println("Nenhum livro encontrado.");
-        }
-    }
 }
