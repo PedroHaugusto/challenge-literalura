@@ -22,7 +22,6 @@ public class BookService {
     public void saveBook(Book book) {
         Author author = authorRepository.save(book.getAuthor());
         book.setAuthor(author);
-
         bookRepository.save(book);
     }
 
@@ -36,5 +35,9 @@ public class BookService {
 
     public long countBooksByLanguage(String language) {
         return bookRepository.countByLanguage(language);
+    }
+
+    public List<Author> getAuthorsAliveInYear(Integer year) {
+        return authorRepository.findAuthorsAliveInYear(year);
     }
 }

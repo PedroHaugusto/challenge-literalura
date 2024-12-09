@@ -65,6 +65,7 @@ public class BookCatalogApp implements CommandLineRunner {
     private void searchBookByTitle(Scanner scanner) {
         System.out.print("Digite o título do livro: ");
         String title = scanner.next();
+
         Author author = new Author();
         author.setName("Autor Exemplo");
         author.setBirthYear(1900);
@@ -92,14 +93,22 @@ public class BookCatalogApp implements CommandLineRunner {
 
     private void listAuthorsAliveInYear(Scanner scanner) {
         System.out.print("Digite o ano para verificar autores vivos: ");
+        if (!scanner.hasNextInt()) {
+            System.out.println("Ano inválido. Por favor, insira um número inteiro.");
+            scanner.next();
+            return;
+        }
+
         int year = scanner.nextInt();
 
-        List<Author> authors = bookService.getAllAuthors();
-        authors.stream()
-                .filter(author -> author.getBirthYear() != null &&
-                        author.getBirthYear() <= year &&
-                        (author.getDeathYear() == null || author.getDeathYear() > year))
-                .forEach(System.out::println);
+        List<Author> authors = bookService.getAuthorsAliveInYear(year);
+
+        if (authors.isEmpty()) {
+            System.out.println("Nenhum autor encontrado vivo no ano " + year + ".");
+        } else {
+            System.out.println("Autores vivos no ano " + year + ":");
+            authors.forEach(System.out::println);
+        }
     }
 
     private void displayBooksByLanguageStatistics(Scanner scanner) {
