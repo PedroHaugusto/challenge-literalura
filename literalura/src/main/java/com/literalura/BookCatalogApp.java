@@ -1,9 +1,11 @@
 package com.literalura;
 
+import com.literalura.models.Author;
+import com.literalura.models.Book;
+import com.literalura.services.BookService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
@@ -11,11 +13,9 @@ import java.util.Scanner;
 public class BookCatalogApp implements CommandLineRunner {
 
     private final BookService bookService;
-    private final List<Book> bookCatalog;
 
     public BookCatalogApp(BookService bookService) {
         this.bookService = bookService;
-        this.bookCatalog = new ArrayList<>();
     }
 
     @Override
@@ -51,7 +51,7 @@ public class BookCatalogApp implements CommandLineRunner {
 
     private void displayMenu() {
         System.out.println("Selecione uma opção:");
-        System.out.println("1. Buscar livro por título");
+        System.out.println("1. Buscar livro por título e salvar");
         System.out.println("2. Listar todos os livros");
         System.out.println("3. Listar todos os autores");
         System.out.println("4. Listar autores vivos em determinado ano");
@@ -61,40 +61,39 @@ public class BookCatalogApp implements CommandLineRunner {
     private void searchBookByTitle(Scanner scanner) {
         System.out.print("Digite o título do livro: ");
         String title = scanner.next();
-        BookApiResponse apiResponse = bookService.fetchBooks(); // Implementar busca por título na API
-        // Filtrar pelo título correto e adicionar ao catálogo
-        apiResponse.getResults().stream()
-                .filter(book -> book.getTitle().equalsIgnoreCase(title))
-                .findFirst()
-                .ifPresent(bookCatalog::add);
-        System.out.println("Livro adicionado ao catálogo.");
+        Author author = new Author();
+        author.setName("Autor Exemplo");
+        author.setBirthYear(1900);
+        author.setDeathYear(1980);
+        Book book = new Book();
+        book.setTitle(title);
+        book.setLanguage("EN");
+        book.setDownloadCount(1000);
+        book.setAuthor(author);
+
+        bookService.saveBook(book);
+        System.out.println("Livro salvo no banco.");
     }
 
     private void listAllBooks() {
-        System.out.println("Catálogo de livros:");
-        bookCatalog.forEach(System.out::println);
+        List<Book> books = bookService.getAllBooks();
+        books.forEach(System.out::println);
     }
 
     private void listAllAuthors() {
-        System.out.println("Autores disponíveis:");
-        bookCatalog.forEach(book -> {
-            Author author = book.getAuthor();
-            if (author != null) {
-                System.out.println("- " + author.getName());
-            }
-        });
+        List<Author> authors = bookService.getAllAuthors();
+        authors.forEach(System.out::println);
     }
 
     private void listAuthorsAliveInYear(Scanner scanner) {
         System.out.print("Digite o ano para verificar autores vivos: ");
         int year = scanner.nextInt();
-        System.out.println("Autores vivos no ano " + year + ":");
-        bookCatalog.stream()
-                .map(Book::getAuthor)
-                .filter(author -> author != null &&
-                        author.getBirthYear() != null &&
+
+        List<Author> authors = bookService.getAllAuthors();
+        authors.stream()
+                .filter(author -> author.getBirthYear() != null &&
                         author.getBirthYear() <= year &&
                         (author.getDeathYear() == null || author.getDeathYear() > year))
-                .forEach(author -> System.out.println("- " + author.getName()));
+                .forEach(System.out::println);
     }
 }

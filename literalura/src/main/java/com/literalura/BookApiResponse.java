@@ -2,6 +2,7 @@ package com.literalura;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.literalura.models.Book;
 
 import java.util.List;
 

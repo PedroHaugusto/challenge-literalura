@@ -1,4 +1,6 @@
-package com.literalura;
+package com.literalura.services;
+
+import com.literalura.HttpClientProvider;
 
 import java.io.IOException;
 import java.net.URI;

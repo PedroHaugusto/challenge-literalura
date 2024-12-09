@@ -1,5 +1,7 @@
 package com.literalura;
 
+import com.literalura.models.Book;
+import com.literalura.services.BookService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 

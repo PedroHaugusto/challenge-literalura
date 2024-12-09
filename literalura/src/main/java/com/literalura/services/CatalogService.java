@@ -1,6 +1,8 @@
-package com.literalura;
+package com.literalura.services;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.literalura.BookApiResponse;
+import com.literalura.models.Book;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
